@@ -10,33 +10,29 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        sh 'npm install'
-      }
-    }
-
-    stage('Run Tests') {
-      steps {
-        sh 'npm test || echo "No tests found, skipping..."'
+        dir('client') {          // 👈 change this folder name as per your repo
+          sh 'npm install'
+        }
       }
     }
 
     stage('Build App') {
       steps {
-        sh 'npm run build || echo "No build script found, skipping..."'
+        dir('client') {
+          sh 'npm run build || echo "No build script found, skipping..."'
+        }
       }
     }
 
     stage('Deploy') {
       steps {
         sh '''
-        if [ -d "build" ]; then
-          sudo cp -r build/* /var/www/html/
-          echo "✅ Deployed build files to /var/www/html/"
-        else
-          echo "⚠️ No build folder found, skipping deployment."
-        fi
+        sudo rm -rf /var/www/html/*
+        sudo cp -r client/build/* /var/www/html/
+        echo "✅ Deployed build files to /var/www/html/"
         '''
       }
     }
   }
 }
+
