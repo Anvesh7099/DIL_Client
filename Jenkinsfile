@@ -8,24 +8,16 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm install'
-      }
-    }
-
-    stage('Build App') {
-      steps {
-        sh 'npm run build || echo "No build script found"'
-      }
-    }
-
-    stage('Deploy') {
+    stage('Deploy to NGINX') {
       steps {
         sh '''
+        echo "🧹 Cleaning old files..."
         sudo rm -rf /var/www/html/*
-        sudo cp -r build/* /var/www/html/
-        echo "✅ Deployed build files to /var/www/html/"
+
+        echo "📦 Copying new files from workspace to NGINX root..."
+        sudo cp -r * /var/www/html/
+
+        echo "✅ Deployment successful! Visit http://<your-ec2-ip>/ to see changes."
         '''
       }
     }
