@@ -10,17 +10,13 @@ pipeline {
 
     stage('Install Dependencies') {
       steps {
-        dir('client') {          // 👈 change this folder name as per your repo
-          sh 'npm install'
-        }
+        sh 'npm install'
       }
     }
 
     stage('Build App') {
       steps {
-        dir('client') {
-          sh 'npm run build || echo "No build script found, skipping..."'
-        }
+        sh 'npm run build || echo "No build script found"'
       }
     }
 
@@ -28,7 +24,7 @@ pipeline {
       steps {
         sh '''
         sudo rm -rf /var/www/html/*
-        sudo cp -r client/build/* /var/www/html/
+        sudo cp -r build/* /var/www/html/
         echo "✅ Deployed build files to /var/www/html/"
         '''
       }
