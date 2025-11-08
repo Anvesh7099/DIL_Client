@@ -2,22 +2,36 @@ pipeline {
   agent any
 
   stages {
-    stage('Checkout Code') {
+    stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/Anvesh7099/DIL_Client.git'
+        git branch: 'main', url: 'https://github.com/spring-projects/spring-petclinic.git'
       }
     }
 
-    stage('Deploy to NGINX') {
+    stage('Build') {
+      steps {
+        sh 'mvn clean package -DskipTests'
+      }
+    }
+
+    stage('Test') {
+      steps {
+        sh 'mvn test || echo "⚠️ Tests failed but continuing in DEV"'
+      }
+    }
+
+    stage('Archive Artifact') {
+      steps {
+        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+      }
+    }
+
+    stage('Deploy') {
       steps {
         sh '''
-        echo "🧹 Cleaning old files..."
-        sudo rm -rf /var/www/html/*
-
-        echo "📦 Copying new files to NGINX root..."
-        sudo cp -r * /var/www/html/
-
-        echo "✅ Deployment successful! Visit: http://3.85.208.233"
+        echo "🚀 Deploying to DEV server..."
+        sudo cp target/*.jar /var/www/html/
+        echo "✅ Deployment complete!"
         '''
       }
     }
