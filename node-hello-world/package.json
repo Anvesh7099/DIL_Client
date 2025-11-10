@@ -1,0 +1,9 @@
+{
+  "name": "node-hello-world",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Build successful!'",
+    "start": "node app.js"
+  }
+}
+
