@@ -25,7 +25,7 @@ pipeline {
 
                     echo "🚀 Starting Node.js app locally..."
                     sudo npm install -g pm2 || true
-                    pm2 start server.js --name node-hello-world
+                    pm2 start "npm start" --name node-hello-world
                     pm2 save
 
                     echo "✅ App deployed and running locally on port 3000!"
