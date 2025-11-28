@@ -7,13 +7,14 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Anvesh7099/DIL_Client.git'
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
                 dir('node-hello-world') {
                     sh '''
@@ -32,6 +33,8 @@ pipeline {
 
                 echo "Starting new container..."
                 docker run -d --name ${CONTAINER_NAME} -p 3000:3000 ${IMAGE_NAME}:latest
+
+                echo "Deployment successful!"
                 '''
             }
         }
